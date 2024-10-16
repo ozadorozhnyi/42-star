@@ -72,14 +72,41 @@ class Storage
         )->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getNextSubscription(int $current_subscription_id): ?array
+    {
+        $sql = '
+        SELECT
+            t.name, t.price_per_month,
+            s.id, s.total_users, s.total_price, s.payment_frequency, s.next_payment_date, s.discount_rate
+        FROM `subscriptions` as s
+        INNER JOIN tariffs as t ON s.tariff_id = t.id
+        INNER JOIN (
+            SELECT parent_id, MAX(id) as max_id
+            FROM `subscriptions`
+            WHERE parent_id = :current_subscription_id
+            GROUP BY parent_id
+        ) as sub ON s.id = sub.max_id
+        WHERE s.parent_id = :current_subscription_id;
+    ';
+
+        $result = $this->pdo->prepare($sql);
+        $result->bindParam(':current_subscription_id', $current_subscription_id, PDO::PARAM_INT);
+        $result->execute();
+
+        $subscription = $result->fetch(PDO::FETCH_ASSOC);
+        return $subscription ?: null;
+    }
+
     public function getCurrentSubscription(): mixed
     {
         $sql = '
             SELECT
-                t.name,
-                s.id, s.total_users, s.total_price, s.payment_frequency, s.next_payment_date
+                t.name, t.price_per_month,
+                s.id, s.total_users, s.total_price, s.payment_frequency, s.next_payment_date, s.discount_rate
             FROM `subscriptions` as s
-            INNER JOIN tariffs as t ON s.tariff_id = t.id;
+            INNER JOIN tariffs as t ON s.tariff_id = t.id
+            WHERE s.is_current = "yes"
+            LIMIT 1;
         ';
 
         $result = $this->pdo->query($sql, PDO::FETCH_ASSOC)->fetch();
@@ -88,14 +115,7 @@ class Storage
             return null;
         }
 
-        return [
-            'id' => $result['id'],
-            'name' => $result['name'],
-            'total_users' => $result['total_users'],
-            'total_price' => $result['total_price'] / 100,
-            'payment_frequency' => $result['payment_frequency'],
-            'next_payment_date' => $result['next_payment_date'],
-        ];
+        return $result;
     }
 
     private function insertSubscription(

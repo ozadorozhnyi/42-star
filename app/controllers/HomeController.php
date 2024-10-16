@@ -11,12 +11,16 @@ class HomeController extends Controller
 
     public function index()
     {
-        $current_subscription = $this->model->getCurrentSubscription();
         $tariffs = $this->model->getTariffs();
+        $current_subscription = $this->model->getCurrentSubscription();
+        $next_subscription = $this->model->getNextSubscription(
+            $current_subscription['id']
+        );
 
         $this->render('home', [
+            'tariffs' => $tariffs,
             'current_subscription' => $current_subscription,
-            'tariffs' => $tariffs
+            'next_subscription' => $next_subscription,
         ]);
     }
 }

@@ -1,1 +1,7 @@
 span>strong {color:red;}
+.subscriptions {display: flex; align-items: center;}
+.next-subscription {
+    margin-left: 30px;
+    border-left: 1px solid #ccc;
+    padding-left: 20px;
+}
