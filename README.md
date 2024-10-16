@@ -1,6 +1,7 @@
 ### Installation Instructions
 
-1) git clone https://github.com/repo p42
-2) mysql -u user -h host -p database_name < path/to/dump.sql
-3) change db connection credentials in `app/config.php` to yours. 
-4) start dev. server: `php -S localhost:8000 -t public`
+1) git clone 
+2) cd p42
+3) mysql -u user -h host -p database_name < ./sql/dump.sql
+4) change credentials for db connections inside `app/config.php` to your own. 
+5) start development server: `php -S localhost:8000 -t public`
