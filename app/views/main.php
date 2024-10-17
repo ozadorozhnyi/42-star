@@ -7,6 +7,12 @@
         <title>Plan42</title>
     </head>
     <body>
+        <?php if (isset($_SESSION['error_message'])): ?>
+            <p class="error_message">
+                <?= $_SESSION['error_message'] ?>
+                <?php unset($_SESSION['error_message']) ?>
+            </p>
+        <?php endif ?>
         <?php
             $page_path = __DIR__ . '/pages/' . $page . '.php';
             if (is_readable($page_path)) {

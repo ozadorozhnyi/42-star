@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+session_start();
+
 const ANNUALLY_DISCOUNT_RATE = 0.20;
 
 const PAYMENT_FREQUENCY_MONTHLY = 'monthly';

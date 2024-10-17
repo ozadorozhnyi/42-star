@@ -5,3 +5,11 @@ span>strong {color:red;}
     border-left: 1px solid #ccc;
     padding-left: 20px;
 }
+.error_message {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid brown;
+    background-color: bisque;
+    color: darkred;
+}
